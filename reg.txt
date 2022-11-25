@@ -1,0 +1,303 @@
+reg css:
+
+.registration-bg{
+    background-image: url("/assets/images/homepageimg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+h2{
+  margin-top: auto;
+  margin-bottom: auto;
+
+}
+.text-center{
+    padding: 25px;
+    text-align: center;
+    color: rgb(248, 248, 250);
+}
+.row {
+    display: flex;
+  }
+  .col {
+    flex: 50%;
+  }
+  .col-2 {
+    flex: 20%;
+  }
+  
+  .center {
+    text-align: center;
+  }
+  
+  input,select {
+    width: 90%;
+    padding: 6px;
+    font-size: 1rem;
+    line-height: 1.5;
+    border: 1px solid #eaeef1;
+    border-radius: 0.25rem;
+  }
+  
+  
+  .group{
+      color: #ffffff;
+      margin: 0.5rem;
+  }
+
+  label {
+    font-size: 20px;
+  }
+  
+  button{
+    margin-top: auto;
+    margin-bottom: 30px;
+    color: #fff;
+    padding: 14px 20px;
+    border: 5px;
+    cursor: pointer;
+    border-radius: 0.5rem;
+  }
+  button:hover{
+    opacity: 0.8;
+  }
+  span{
+    color: rgb(243, 6, 6);
+    font-weight: bold;
+  }
+  .btnGreen{
+    background-color: #199737;
+    margin-right: 60px;
+  }
+  
+  .btnRed {
+    background-color: #b12734;
+    margin-left: 60px;
+  }
+
+  
+reg HTML:
+
+<app-navbar></app-navbar>
+<div class="container registration-bg">
+    <form (ngSubmit)="onSubmit()" [formGroup]="regForm">
+        <h2 class="container text-center">REGISTRATION FORM</h2>
+        <div class="row">
+               <div class="col-2"></div>
+               <div class="col">
+                 <div class="group">
+                   <label>Student Name :</label>
+                   <input type="text" autocomplete="off" name="studentName" formControlName="studentName" />
+                   <span *ngIf="check('studentName')"> *Name is required</span>
+                 </div>
+                 <div class="group">
+                   <label>Parent Name:</label>
+                   <input type="text" autocomplete="off" name="parentName" formControlName="parentName" />
+                   <span *ngIf="check('parentName')"> *Name is required</span>
+                 </div>
+                 <div class="group">
+                   <label>Email Id:</label>
+                   <input type="text" autocomplete="off" name="emailId" formControlName="emailId" />
+                   <span *ngIf="check('emailId')"> *Email Id is required</span>
+                 </div>
+                 <div class="group">
+                   <label>Address:</label>
+                   <input type="text" autocomplete="off" name="address" formControlName="address" />
+                   <span *ngIf="check('address')"> *Address is required</span>
+                  </div>
+                 <div class="group">
+                   <label>City:</label>
+                   <input type="text" autocomplete="off" name="city" formControlName="city" />
+                   <span *ngIf="check('city')"> *City is required</span>
+                 </div>
+                 <div class="group">
+                  <label>State:</label>
+                  <input type="text" autocomplete="off" name="state" formControlName="state" />
+                  <span *ngIf="check('state')"> *State is required</span>
+                </div>
+               </div>
+                 <div class="col">
+                  <div class="group">
+                    <label>ZipCode:</label>
+                    <input type="text" autocomplete="off" name="zipCode" formControlName="zipCode" />
+                    <span *ngIf="check('zipCode')"> *Zip Code is required</span>
+                  </div>
+                 <div class="group">
+                   <label>Country:</label>
+                   <input type="text" autocomplete="off" name="country" formControlName="country" />
+                   <span *ngIf="check('country')"> *Country is required</span>
+                 </div>
+                 <div class="group">
+                   <label>Primary Contact Person Name:</label>
+                   <input type="text" autocomplete="off" name="primaryContactPersonName" formControlName="primaryContactPersonName" />
+                   <span *ngIf="check('primaryContactPersonName')"> *Name is required</span>
+                 </div>
+                 <div class="group">
+                   <label>Primay Mobile Number:</label>
+                   <input type="text" autocomplete="off" name="primaryMobile" formControlName="primaryMobile" />
+                   <span *ngIf="check('primaryMobile')"> *phone Number is required</span>
+                 </div>
+                 <div class="group">
+                   <label>Secondary Contact Person Name:</label>
+                   <input type="text" autocomplete="off" name="secondaryContactPersonName" formControlName="secondaryContactPersonName" />
+                   <span *ngIf="check('secondaryContactPersonName')"> *Name is required</span>
+                 </div>
+                 <div class="group">
+                   <label>Secondary Mobile Number:</label>
+                   <input type="text" autocomplete="off" name="secondaryMobile" formControlName="secondaryMobile" />
+                   <span *ngIf="check('secondaryMobile')"> *phone Number is required</span>
+                 </div>
+               </div>
+               <div class="col-2"> </div>
+             </div>
+             <br />
+             <div class="center">
+                 <button type="submit"  class="btnGreen" >Submit</button>
+                 <button type="reset" (click)="resetBtn()" class="btnRed">Reset</button>
+             </div>
+         </form>
+</div>
+
+
+
+
+reg ts:
+
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ParentService } from '../service/parent.service';
+
+
+@Component({
+  selector: 'app-registration',
+  templateUrl: './registration.component.html',
+  styleUrls: ['./registration.component.css']
+})
+export class RegistrationComponent implements OnInit {
+  
+ 
+  regForm: FormGroup
+  msg: boolean = false;
+  emailPattern = "^[a-zA-Z0-9_+&*-]+(?:\\." + "[a-zA-Z0-9_+&*-]+)*@" + "(?:[a-zA-Z0-9-]+\\.)+[a-z" + "A-Z]{2,7}$";
+  phonePattern = "^[0-9]{3}[0-9]{3}[0-9]{4}$";
+  zipcodePattern = "^[1-9]{1}[0-9]{2}\\s{0,1}[0-9]{3}$";
+  constructor(private fb:FormBuilder, private parentService: ParentService, private router: Router,private route:ActivatedRoute, private httpClient: HttpClient) { 
+    this.regForm = this.fb.group({
+      studentName: this.fb.control('',Validators.required),
+      parentName: this.fb.control('',Validators.required),
+      emailId: this.fb.control('',[Validators.required, Validators.pattern(this.emailPattern)]),
+      address: this.fb.control('',Validators.required),
+      city: this.fb.control('',Validators.required),
+      state: this.fb.control('',Validators.required),
+      zipCode: this.fb.control('',[Validators.required,Validators.pattern(this.zipcodePattern)]),
+      country: this.fb.control('',Validators.required),
+      primaryContactPersonName: this.fb.control('',Validators.required),
+      primaryMobile: this.fb.control('',[Validators.required, Validators.pattern(this.phonePattern)]),
+      secondaryContactPersonName: this.fb.control('',Validators.required),
+      secondaryMobile: this.fb.control('',[Validators.required, Validators.pattern(this.phonePattern)])
+    })
+  }
+
+  ngOnInit(): void {
+   
+    }
+    get emailId(){
+      return this.regForm.get('emailId') as FormControl;
+    }
+
+  onSubmit() {
+    console.log(this.regForm.value);
+    if(this.regForm.valid) {
+      this.parentService.doReg(this.regForm.value).subscribe({
+        next: (data: any) => {
+        console.log(data)
+        alert("Details Submitted Successfully and Save Your REGISTRATION ID : " + data.id + " For Your Future Updates, And next it open Update form, if you want to update your details, Enter your details and click submit or click cancel for navigate to registration page");
+        this.router.navigate(['/update',data.id]);
+        }
+      });
+    } else {
+      this.msg = true;
+      window.alert('Please fill all Required Field or Enter your details Properly');
+    }
+  }
+  resetBtn() {
+    this.regForm.reset();
+    this.msg = false;
+  }
+  check(input: string) {
+    return(this.regForm.get(input)?.errors?.['required'] && this.regForm.get(input)?.touched) || (this.regForm.get(input)?.errors?.['required'] && this.msg)
+  }
+
+ 
+ 
+}
+
+reg table:
+
+import { Injectable } from "@angular/core";
+
+@Injectable()
+export class ParentDetails{
+  id: number;
+  studentName: string;
+  parentName: string;
+  emailId: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  primaryContactPersonName: string;
+  primaryMobile: string;
+  secondaryContactPersonName: string;
+  secondaryMobile!: string;
+  registerDate: Date;
+}
+
+reg http service:
+
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ParentDetails } from './parentdetails.service';
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ParentService {
+ 
+  parent: Observable<ParentDetails>[];
+  private baseUrl = 'http://localhost:8080/schoolParent/api/details'
+  private baseUrlUpdate = 'http://localhost:8081/schoolParentUpdate/api'
+  constructor(private http: HttpClient) { }
+
+  getParentDetailsList(): any {
+    return this.http.get(`${this.baseUrl}/list`)
+  }
+  
+  doReg(ParentDetails: object): Observable<object> {
+    return this.http.post(`${this.baseUrl}/add`, ParentDetails);
+  }
+ 
+  parentUpdate(id: number, parentDetails: object): Observable<any> {
+    return this.http.put(`${this.baseUrl}/update/${id}`, parentDetails, { responseType: 'text'});
+  }
+
+  getParentId(id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/get/${id}`);
+  }
+  
+  approved(id: number, parentDetails: object): Observable<any> {
+    return this.http.put(`${this.baseUrl}/approved/${id}`, parentDetails, { responseType: 'text'});
+  }
+
+  rejected(id: number, parentDetails: object): Observable<any> {
+    return this.http.put(`${this.baseUrlUpdate}/rejected/${id}`, parentDetails, { responseType: 'text'});
+  }
+
+  deleteTour(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/delete/${id}`, { responseType: 'text' });
+  }
+}
